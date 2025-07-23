@@ -28,7 +28,7 @@ jobs:
 
       - name: Docker build and push to ACR
         run: |
-          docker build -t ${{ env.AZURE_ACR_NAME }}/${{ env.IMAGE_NAME }}:latest .
+          docker build -f aspnetcore/tutorials/first-web-api/samples/2.2/TodoApi/Dockerfile -t ${{ env.AZURE_ACR_NAME }}/${{ env.IMAGE_NAME }}:latest aspnetcore/tutorials/first-web-api/samples/2.2/TodoApi
           docker push ${{ env.AZURE_ACR_NAME }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Deploy to Web App
