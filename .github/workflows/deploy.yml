@@ -1,0 +1,38 @@
+name: Build and Deploy to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AZURE_WEBAPP_NAME: dotnet-simple-app-service
+  AZURE_ACR_NAME: simpledotnetproject.azurecr.io
+  IMAGE_NAME: dotnetcore-api
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to ACR
+        run: az acr login --name ${{ env.AZURE_ACR_NAME }}
+
+      - name: Docker build and push to ACR
+        run: |
+          docker build -t ${{ env.AZURE_ACR_NAME }}/${{ env.IMAGE_NAME }}:latest .
+          docker push ${{ env.AZURE_ACR_NAME }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Deploy to Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          images: ${{ env.AZURE_ACR_NAME }}/${{ env.IMAGE_NAME }}:latest
