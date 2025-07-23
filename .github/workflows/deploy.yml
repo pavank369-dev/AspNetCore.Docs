@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  AZURE_WEBAPP_NAME: dotnet-simple-app-service
+  AZURE_WEBAPP_NAME: simpledotnetproject
   AZURE_ACR_NAME: simpledotnetproject.azurecr.io
   IMAGE_NAME: dotnetcore-api
 
